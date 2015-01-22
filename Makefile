@@ -2,14 +2,24 @@
 
 all: stop-cluster riak-container start-cluster
 
+DOCKER_NAME := groovenauts/riak
+DOCKER_TAG  := 2.0.2-1
+
+UNAME = $(shell uname)
+ifeq "$(UNAME)" "Darwin"
+SUDO =
+else
+SUDO = sudo
+endif
+
 build riak-container:
-	docker build -t "hectcastro/riak" .
+	$(SUDO) docker build -t $(DOCKER_NAME):$(DOCKER_TAG) .
 
 start-cluster:
-	./bin/start-cluster.sh
+	$(SUDO) ./bin/start-cluster.sh
 
 test-cluster:
-	./bin/test-cluster.sh
+	$(SUDO) ./bin/test-cluster.sh
 
 stop-cluster:
-	./bin/stop-cluster.sh
+	$(SUDO) ./bin/stop-cluster.sh
